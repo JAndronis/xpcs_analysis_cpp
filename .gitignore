@@ -111,6 +111,7 @@ _deps
 
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+*.ipynb
 
 # IPython
 profile_default/
@@ -281,3 +282,12 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+### HDF5 template
+*.h5
+*.hdf5
+**/*.h5
+**/*.hdf5
+
+### CMake Targets
+cmake-build-debug
+cmake-build-release
