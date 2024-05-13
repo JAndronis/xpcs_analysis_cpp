@@ -289,5 +289,5 @@ cython_debug/
 **/*.hdf5
 
 ### CMake Targets
-cmake-build-debug
-cmake-build-release
+cmake-build-debug*
+cmake-build-release*
