@@ -3,16 +3,18 @@ project(xpcs_analysis)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_library(xpcs_analysis STATIC library.cpp
-        TwoTimeCorrelator.cpp
-        TwoTimeCorrelator.h)
+add_library(xpcs_analysis STATIC library.cpp)
 add_executable(main main.cpp)
 
 find_package(Armadillo REQUIRED)
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
+# submodules
+add_subdirectory(extern/argparse)
+include_directories(extern/argparse/include)
+
 find_package(OpenMP REQUIRED COMPONENTS CXX)
-find_package(carma CONFIG REQUIRED)
+#find_package(carma CONFIG REQUIRED)
 find_package(HDF5 REQUIRED COMPONENTS CXX)
 
 target_link_libraries(
@@ -20,6 +22,7 @@ target_link_libraries(
         PUBLIC
         OpenMP::OpenMP_CXX
         ${ARMADILLO_LIBRARIES}
+        HDF5::HDF5
 )
 
 target_link_libraries(
@@ -28,7 +31,7 @@ target_link_libraries(
         xpcs_analysis
         OpenMP::OpenMP_CXX
         ${ARMADILLO_LIBRARIES}
-        ${HDF5_CXX_LIBRARIES}
+        HDF5::HDF5
 )
 
 if(NOT CMAKE_BUILD_TYPE)
