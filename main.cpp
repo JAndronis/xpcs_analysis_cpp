@@ -4,6 +4,8 @@
 
 #include "library.h"
 
+#include <tuple>
+
 #include <argparse/argparse.hpp>
 #include <H5Cpp.h>
 
@@ -43,6 +45,8 @@ int main(int argc, const char *argv[]) {
     auto verbose     = program.get<bool>("--verbose");
     auto numthreads  = program.get<int>("--num_threads");
 
+    std::vector<std::tuple<uint64_t, uint64_t>> blocks(numthreads);
+
     try {
 
         H5::H5File file(filename, H5F_ACC_RDONLY);
@@ -65,6 +69,13 @@ int main(int argc, const char *argv[]) {
 
         arma::Col<uint64_t> sqnc_arma(sqnc);
         sqnc_dataset.close();
+
+        uint64_t counter = 0;
+        for (auto &i: blocks) {
+            i = std::tuple<uint64_t, uint64_t>(counter, counter + sqnc_arma.n_elem / numthreads);
+            counter += sqnc_arma.n_elem / numthreads;
+        }
+
 
         // get dt
         H5::DataSet dt_dataset = file.openDataSet(DT);
@@ -94,7 +105,7 @@ int main(int argc, const char *argv[]) {
 
         arma::SpMat<uint16_t> imgs(masked_row_size*masked_col_size, max_imgs);
 
-        arma::Mat<uint16_t> avg_img(EIGER_Y, EIGER_X, arma::fill::zeros);
+        arma::Mat<uint16_t> avg_img(EIGER_X, EIGER_Y, arma::fill::zeros);
         arma::Mat<uint16_t> avg_roi(masked_row_size, masked_col_size, arma::fill::zeros);
         hsize_t             offset[3] = {0, 0, 0};
 
@@ -109,29 +120,27 @@ int main(int argc, const char *argv[]) {
             // allocate buffer
             uint16_t data[EIGER_Y][EIGER_X];
             img_dataset.read(data, H5::PredType::NATIVE_UINT16, chunk_space, img_filespace);
-            arma::Mat<uint16_t> img(EIGER_Y, EIGER_X);
-
-            for (int i = 0 ; i < EIGER_Y ; i++) {
-                for (int j = 0 ; j < EIGER_X ; j++) {
-                    img(i, j) = data[i][j];
-                }
-            }
-
-            auto sub_img = img.submat(ymin, xmin, ymax - 1, xmax - 1);
-
-            arma::SpCol<uint16_t> sp_img(sub_img.as_col());
-
+            arma::Mat<uint16_t> img(&data[0][0], EIGER_X, EIGER_Y, false, true);
+//            for (int i = 0 ; i < EIGER_Y ; i++) {
+//                for (int j = 0 ; j < EIGER_X ; j++) {
+//                    img(i, j) = data[i][j];
+//                }
+//            }
+            arma::Mat<uint16_t> sub_img = img.submat(xmin, ymin, xmax - 1, ymax - 1);
+            arma::Col<uint16_t> sub_img_col = sub_img.as_col();
+            arma::SpCol<uint16_t> sp_img(sub_img_col);
+            arma::uvec locations = arma::find(sub_img>0);
+            std::cout << locations << std::endl;
             imgs.col(k) = sp_img;
-            avg_img += img;
-            avg_roi += sub_img;
         }
         img_dataset.close();
 
+        avg_img = arma::reshape(arma::Mat<uint16_t>(arma::mean(imgs, 1)), EIGER_X, EIGER_Y);
         arma::mat ttc = xpcs::generateTTC(imgs, sqnc_arma, numthreads, verbose);
         ttc.save(arma::hdf5_name(output_file, "/ttc/data"));
         time_axis.save(arma::hdf5_name(output_file, "/ttc/time_axis", arma::hdf5_opts::append));
         avg_img.save(arma::hdf5_name(output_file, "/waxs/data", arma::hdf5_opts::append));
-        avg_roi.save(arma::hdf5_name(output_file, "/waxs/roi_data", arma::hdf5_opts::append));
+//        avg_roi.save(arma::hdf5_name(output_file, "/waxs/roi_data", arma::hdf5_opts::append));
     } // end of try block
     // catch failure caused by the H5File operations
     catch (H5::FileIException &error) {

@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.20)
 project(xpcs_analysis)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 add_library(xpcs_analysis STATIC library.cpp)
 add_executable(main main.cpp)
@@ -15,7 +15,10 @@ include_directories(extern/argparse/include)
 
 find_package(OpenMP REQUIRED COMPONENTS CXX)
 #find_package(carma CONFIG REQUIRED)
+set(HDF5_PREFER_PARALLEL TRUE)
 find_package(HDF5 REQUIRED COMPONENTS CXX)
+
+message(STATUS "HDF5 Parallel support:" ${HDF5_IS_PARALLEL})
 
 target_link_libraries(
         xpcs_analysis
