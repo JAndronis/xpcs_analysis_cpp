@@ -6,26 +6,21 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(xpcs_analysis STATIC library.cpp)
 add_executable(main main.cpp)
 
-find_package(Armadillo REQUIRED)
-include_directories(${ARMADILLO_INCLUDE_DIRS})
-
 # submodules
 add_subdirectory(extern/argparse)
-include_directories(extern/argparse/include)
+add_subdirectory(extern/HighFive)
+add_subdirectory(extern/eigen)
 
 find_package(OpenMP REQUIRED COMPONENTS CXX)
-#find_package(carma CONFIG REQUIRED)
-set(HDF5_PREFER_PARALLEL TRUE)
 find_package(HDF5 REQUIRED COMPONENTS CXX)
-
-message(STATUS "HDF5 Parallel support:" ${HDF5_IS_PARALLEL})
 
 target_link_libraries(
         xpcs_analysis
-        PUBLIC
+        PRIVATE
         OpenMP::OpenMP_CXX
-        ${ARMADILLO_LIBRARIES}
-        HDF5::HDF5
+        HighFive
+        eigen
+        argparse::argparse
 )
 
 target_link_libraries(
@@ -33,8 +28,9 @@ target_link_libraries(
         PRIVATE
         xpcs_analysis
         OpenMP::OpenMP_CXX
-        ${ARMADILLO_LIBRARIES}
-        HDF5::HDF5
+        HighFive
+        eigen
+        argparse::argparse
 )
 
 if(NOT CMAKE_BUILD_TYPE)
