@@ -3,7 +3,13 @@ project(xpcs_analysis)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(xpcs_analysis STATIC library.cpp)
+add_library(
+        xpcs_analysis
+        STATIC
+        library.cpp
+        BaseCorrelator.cpp
+        BaseCorrelator.h
+)
 add_executable(main main.cpp)
 
 # submodules
@@ -11,9 +17,11 @@ add_subdirectory(extern/argparse)
 add_subdirectory(extern/HighFive)
 add_subdirectory(extern/eigen)
 
+# dependencies
 find_package(OpenMP REQUIRED COMPONENTS CXX)
 find_package(HDF5 REQUIRED COMPONENTS CXX)
 
+# linking
 target_link_libraries(
         xpcs_analysis
         PRIVATE
@@ -33,6 +41,7 @@ target_link_libraries(
         argparse::argparse
 )
 
+# extra flags
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
