@@ -291,3 +291,17 @@ cython_debug/
 ### CMake Targets
 cmake-build-debug*
 cmake-build-release*
+
+### Mac os X
+.DS_Store
+
+### Data
+data
+*/data
+
+### tests
+testing.py
+analysis.ipynb
+
+### .idea
+.idea

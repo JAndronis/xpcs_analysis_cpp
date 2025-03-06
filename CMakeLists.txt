@@ -3,49 +3,23 @@ project(xpcs_analysis)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(
-        xpcs_analysis
-        STATIC
-        library.cpp
-        BaseCorrelator.cpp
-        BaseCorrelator.h
-)
-add_executable(main main.cpp)
-
 # submodules
 add_subdirectory(extern/argparse)
-add_subdirectory(extern/HighFive)
 add_subdirectory(extern/eigen)
+add_subdirectory(extern/pybind11)
+include_directories(extern/pybind11/include)
 
 # dependencies
+find_package(Python3 COMPONENTS Development REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
 find_package(OpenMP REQUIRED COMPONENTS CXX)
-find_package(HDF5 REQUIRED COMPONENTS CXX)
+find_package(pybind11 CONFIG)
 
-# linking
-target_link_libraries(
-        xpcs_analysis
-        PRIVATE
-        OpenMP::OpenMP_CXX
-        HighFive
-        eigen
-        argparse::argparse
-)
+pybind11_add_module(xpcs_analysis_py MODULE ttc.cpp bindings.cpp)
+target_link_libraries(xpcs_analysis_py PRIVATE pybind11::module Eigen3::Eigen OpenMP::OpenMP_CXX)
 
-target_link_libraries(
-        main
-        PRIVATE
-        xpcs_analysis
-        OpenMP::OpenMP_CXX
-        HighFive
-        eigen
-        argparse::argparse
-)
+install(TARGETS xpcs_analysis_py DESTINATION .)
 
-# extra flags
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
+set(CMAKE_CXX_FLAGS_DEBUG "-g -fsanitize=thread -fno-omit-frame-pointer")
+set(CMAKE_LINKER_FLAGS_DEBUG "-fsanitize=thread")
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")

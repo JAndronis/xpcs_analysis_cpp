@@ -1,0 +1,14 @@
+[build-system]
+requires = ["scikit-build-core", "pybind11", "cmake", "ninja"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+cmake.args = ["-DCMAKE_CXX_STANDARD=17"]
+cmake.build-type = "Release"
+build.targets = ["xpcs_analysis_py"]
+ninja.make-fallback = true
+
+[project]
+name = "xpcs_analysis_py"
+version = "0.1.0"
+license="MIT"
