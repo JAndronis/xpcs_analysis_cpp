@@ -15,7 +15,7 @@ include_directories(${PYTHON_INCLUDE_DIRS})
 find_package(OpenMP REQUIRED COMPONENTS CXX)
 find_package(pybind11 CONFIG)
 
-pybind11_add_module(xpcs_analysis_py MODULE ttc.cpp bindings.cpp)
+pybind11_add_module(xpcs_analysis_py MODULE ttc.cpp ttc.h g2.cpp g2.h bindings.cpp)
 target_link_libraries(xpcs_analysis_py PRIVATE pybind11::module Eigen3::Eigen OpenMP::OpenMP_CXX)
 
 install(TARGETS xpcs_analysis_py DESTINATION .)
