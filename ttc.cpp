@@ -8,7 +8,7 @@ Eigen::ArrayXX<double> xpcs::generateTTC(const Eigen::Ref<Eigen::MatrixX<uint16_
     std::cout<<"Nframes: "<<nframes<<std::endl;
     Eigen::ArrayXX<double> ttc = Eigen::ArrayXX<double>::Ones(nframes, nframes);
     
-    omp_set_num_threads(4);
+    omp_set_num_threads(omp_get_max_threads());
     #pragma omp parallel for shared(ttc, evts, nframes, npixels)
     for (long i = 0; i < nframes; i++) {
         for (long j = i; j < nframes; j++) {
