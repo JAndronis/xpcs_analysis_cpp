@@ -6,7 +6,7 @@ Basic installation commands are:
 ```
 git clone <repository>
 cd xpcs_analysis_cpp
-git submodule init
+git submodule update
 conda create env -f xpcs_<your os>.yml
 python3 -m pip install .
 ```
