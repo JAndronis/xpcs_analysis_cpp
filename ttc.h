@@ -7,7 +7,7 @@
 #include <Eigen/Dense>
 
 namespace xpcs {
-    Eigen::ArrayXX<double> generateTTC(const Eigen::Ref<Eigen::MatrixX<uint16_t>>& evts);
+    Eigen::ArrayXX<float> generateTTC(const Eigen::Ref<Eigen::MatrixX<uint16_t>>&);
 }
 
 #endif //XPCS_ANALYSIS_LIBRARY_H

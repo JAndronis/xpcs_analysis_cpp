@@ -3,10 +3,6 @@ project(xpcs_analysis)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(main main.cpp ttc.cpp ttc.h
-        g2.cpp
-        g2.h)
-
 # submodules
 add_subdirectory(extern/argparse)
 add_subdirectory(extern/eigen)
@@ -21,8 +17,6 @@ find_package(pybind11 CONFIG)
 
 pybind11_add_module(xpcs_analysis_py MODULE ttc.cpp bindings.cpp)
 target_link_libraries(xpcs_analysis_py PRIVATE pybind11::module Eigen3::Eigen OpenMP::OpenMP_CXX)
-
-target_link_libraries(main PRIVATE Eigen3::Eigen OpenMP::OpenMP_CXX)
 
 install(TARGETS xpcs_analysis_py DESTINATION .)
 
