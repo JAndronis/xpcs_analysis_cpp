@@ -3,6 +3,7 @@
 //
 
 #include "ttc.h"
+#include "g2.h"
 
 #include <iostream>
 
@@ -11,12 +12,9 @@ constexpr int EIGER_Y = 300;
 
 int main(int argc, const char *argv[]) {
     auto nframes = 912;
-    auto evt = [](){ return Eigen::VectorX<uint16_t>::Random(EIGER_X*EIGER_Y); };
     Eigen::ArrayXX<uint16_t> evts = Eigen::ArrayXX<uint16_t>::Zero(EIGER_X*EIGER_Y, nframes);
-    for (int i = 0; i < nframes; i++) {
-        evts.col(i) = evt();
-    }
-    auto result = xpcs::generateTTC(evts);
+    evts.setRandom();
+    auto result = xpcs::generateG2(evts);
     Eigen::Index minRow, minCol;
     Eigen::Index maxRow, maxCol;
     double min = result.minCoeff(&minRow, &minCol);
