@@ -14,8 +14,8 @@ Eigen::ArrayX<float> xpcs::generateG2(const Eigen::Ref<Eigen::MatrixX<uint16_t>>
     for (long tau=0; tau<nframes; tau++) {
         Eigen::VectorXf dimg_tau = evts.col(tau).cast<float>();
         float norm_t0 = dimg_t0.mean();
-        float norm_tau = dimg_tau.mean();
-        float denom = (norm_t0 * norm_tau) / (float) nframes;
+//        float norm_tau = dimg_tau.mean();
+        float denom = (norm_t0 * norm_t0) / (float) nframes;
         float nom = dimg_t0.dot(dimg_tau) / npixels / (float) nframes;
         g2(tau) = nom / denom;
     }
