@@ -1,4 +1,4 @@
-name: dls
+name: xpcs-env
 channels:
   - nsls2forge
   - conda-forge
