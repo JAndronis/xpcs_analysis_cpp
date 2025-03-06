@@ -2,8 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/extern/HighFive" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/extern/HighFive/deps/catch2" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/extern/argparse" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/extern/eigen" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/extern/pybind11" vcs="Git" />
