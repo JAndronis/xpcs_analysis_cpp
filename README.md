@@ -6,6 +6,7 @@ Basic installation commands are:
 ```
 git clone <repository>
 cd xpcs_analysis_cpp
+git submodule init
 git submodule update
 conda env create -f xpcs_<your os>.yml
 conda activate xpcs-env
