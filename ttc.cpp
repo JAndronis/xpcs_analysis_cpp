@@ -4,8 +4,6 @@
 Eigen::ArrayXX<float> xpcs::generateTTC(const Eigen::Ref<Eigen::MatrixX<uint16_t>>& evts) {
     auto nframes = evts.cols();
     auto npixels = (double) evts.rows();
-    std::cout<<"Npixels: "<<npixels<<std::endl;
-    std::cout<<"Nframes: "<<nframes<<std::endl;
     Eigen::ArrayXX<float> ttc = Eigen::ArrayXX<float>::Ones(nframes, nframes);
     
     omp_set_num_threads(omp_get_max_threads());
