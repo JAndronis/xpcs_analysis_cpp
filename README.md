@@ -1,4 +1,4 @@
-# Basic Two-Time corralation analysis code
+# Basic Two-Time correlation analysis code
 
 ## Installation
 Basic installation commands are:
